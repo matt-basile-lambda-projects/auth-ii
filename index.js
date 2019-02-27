@@ -63,15 +63,25 @@ server.post('/api/login', (req, res) => {
       res.status(500).json(error);
     });
 });
-
-
-
-
-
-
-
-
-server.get('/api/users', (req, res) => {
+// Restricted Function checks if used has a token, if so they can come in
+function restricted(req, res, next) {
+	const token = req.headers.authorization;
+	if(token){
+		jwt.verify(token, secret, (err, decodedToken)=>{
+			if(err){
+				//record the event - tokens been tampered 
+				res.status(401).json({message: "can't touch this!"})
+			}else{
+				req.decodedJWT = decodedToken
+				next();
+			}
+		})
+	}else{
+		res.status(401).json({message: 'Invalid Credentials'})
+	}
+}
+// Get Users only if logged in
+server.get('/api/users', restricted, (req, res) => {
   Users.find()
     .then(users => {
       res.json({users});
