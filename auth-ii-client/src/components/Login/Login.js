@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-
 export default class Login extends Component {
   state ={
       username: 'matty',
-      password: "pass"
+      password: 'pass'
   }
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -16,7 +15,6 @@ export default class Login extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const endpoint = 'http://localhost:5000/api/login';
-
     axios
       .post(endpoint, this.state)
       .then(res => {
@@ -26,16 +24,13 @@ export default class Login extends Component {
       })
       .catch(error => console.error(error));
   };
-
+//   
 render() {
     return (
         <>
 <div>
     <div className="w-full max-w-xs mx-auto">
-        <form 
-        onSubmit={ev => this.handleSubmit(ev)}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        >
+        <form onSubmit={ev=>this.handleSubmit(ev)} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <h2 className="text-center">Login</h2>
             <div className="mb-4">
                 <label className="block text-grey-darker text-sm font-bold mb-2" htmlFor="username">
@@ -61,7 +56,7 @@ render() {
                 />
             </div>
             <div className="flex items-center justify-center">
-                <button className="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                <button className="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                 Log In
                 </button>
             </div>

@@ -5,9 +5,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-// const knex = require('knex');
-// const knexConfig = require('./knexfile')
-// const db = knex(knexConfig.development);
+
 const Users = require('./helpers/users-model.js');
 
 const secret = process.env.JWT_SECRET || 'demo secret MFers'; 
@@ -18,18 +16,17 @@ server.use(express.json());
 server.use(cors());
 // Auth/Login API
 server.post('/api/register', (req, res) => {
-    let user = req.body;
-    // generate hash from user's password
-    const hash = bcrypt.hashSync(user.password, 10); // 2 ^ n
-    // override user.password with hash
-    user.password = hash;
-    Users.add(user)
-      .then(saved => {
-        res.status(201).json(saved);
-      })
-      .catch(error => {
-        res.status(500).json(error);
-      });
+  let user = req.body;
+  const hash = bcrypt.hashSync(user.password, 10); // 2 ^ n
+  user.password = hash;
+
+  Users.add(user)
+    .then(saved => {
+      res.status(201).json(saved);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
 });
 //Generate Token
 function generateToken(user){
@@ -45,16 +42,17 @@ function generateToken(user){
 }
 server.post('/api/login', (req, res) => {
   let { username, password } = req.body;
+
   Users.findBy({ username })
     .first()
     .then(user => {
-      // check that passwords match
       if (user && bcrypt.compareSync(password, user.password)) {
-        // generate token
-        const token = generateToken(user)
-        res
-          .status(200)
-          .json({ message: `Welcome ${user.username}!, have a token...`, token });
+        const token = generateToken(user); // new
+        res.status(200).json({
+          message: `Welcome ${user.username}!, have a token...`,
+          token,
+          roles: token.roles,
+        });
       } else {
         res.status(401).json({ message: 'Invalid Credentials' });
       }
@@ -84,7 +82,7 @@ function restricted(req, res, next) {
 server.get('/api/users', restricted, (req, res) => {
   Users.find()
     .then(users => {
-      res.json({users});
+      res.json({users, decodedToken: req.decodedJWT});
     })
     .catch(err => res.send(err));
 });

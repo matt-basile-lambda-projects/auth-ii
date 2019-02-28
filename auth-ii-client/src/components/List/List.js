@@ -1,15 +1,22 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import requireAuth  from '../../auth/requiresAuth'
 
-export default class List extends Component {
+
+ class List extends Component {
         state = {
           users: [],
         };
         componentDidMount() {
-          axios.get('http://localhost:5000/api/users').then(res => {
+          axios.get('/users').then(res => {
             this.setState({ users: res.data.users });
           });
         }
+        logout = () => {
+          localStorage.removeItem('jwt');
+
+          this.props.history.push('/login');
+        };
       
         render() {
           return (
@@ -20,7 +27,10 @@ export default class List extends Component {
                   <li key={u.id}>{u.username}</li>
                 ))}
               </ul>
+              <button onClick={this.logout}>Logout</button>
             </>
           );
         }
 }
+
+export default requireAuth(List)
