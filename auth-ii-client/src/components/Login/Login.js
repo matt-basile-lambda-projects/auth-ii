@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import {Link} from 'react-router-dom'
 
 export default class Login extends Component {
   state ={
@@ -55,10 +56,15 @@ render() {
                 type="password"
                 />
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-between">
                 <button className="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                 Log In
                 </button>
+                <Link to="/register">
+                    <button className="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Sign Up
+                    </button>
+                </Link>
             </div>
         </form>
     <p className="text-center text-grey text-xs">
