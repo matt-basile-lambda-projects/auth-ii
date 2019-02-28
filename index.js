@@ -92,7 +92,3 @@ server.get('/api/users', restricted, (req, res) => {
 const port = process.env.PORT || 5000;
 server.listen(port, () => console.log(`\n** Running on port ${port} **\n`));
 
-//Server Starter Sanity Check
-// server.get('/', (req, res) => {
-//     res.send("sanity check")
-// });
